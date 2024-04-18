@@ -1,16 +1,46 @@
 // Require the necessary discord.js classes
-import { Client, Events, GatewayIntentBits } from "discord.js"
-const token = "" // <- Add your discord bot token here. This is not for production!
+import { Client, Events, GatewayIntentBits, REST, Routes, SlashCommandBuilder, CommandInteraction } from "discord.js"
+const token = process.env.API_TOKEN
 
 // Create a new client instance
 const client = new Client({
    intents: [GatewayIntentBits.Guilds]
 })
 
+client.on('interactionCreate', async (interaction) => {
+   if (!interaction.isCommand()) return;
+
+   const command = interaction.commandName;
+
+   if (command === 'ping') {
+      const start = Date.now();
+      const end = Date.now();
+      const ping = end - start;
+      await interaction.reply({ content: `Pong! ${ping}ms`, fetchReply: true });
+   }
+});
+
+const rest = new REST({ version: '10' }).setToken(token ? token : '');
+
+const commands = [
+   new SlashCommandBuilder()
+      .setName('ping')
+      .setDescription('Replies with Pong!'),
+];
+
 // When the client is ready, run this code (only once)
-// We use 'c' for the event parameter to keep it separate from the already defined 'client'
-client.once(Events.ClientReady, c => {
-	console.log(`Ready! Logged in as ${c.user.tag}`)
+client.once(Events.ClientReady, async client => {
+	console.log(`Ready! Logged in as ${client.user.tag}`)
+
+   try {
+      console.log('Started refreshing application (/) commands.');
+    
+      await rest.put(Routes.applicationCommands(client.user.id), { body: commands });
+    
+      console.log('Successfully reloaded application (/) commands.');
+    } catch (error) {
+      console.error(error);
+    }
 })
 
 // Log in to Discord with your client's token
