@@ -18,6 +18,10 @@ client.on('interactionCreate', async (interaction) => {
       const ping = end - start;
       await interaction.reply({ content: `Pong! ${ping}ms`, fetchReply: true });
    }
+
+   if (command === 'server') {
+      await interaction.reply(`Server name: ${interaction.guild?.name}\nTotal members: ${interaction.guild?.memberCount}`);
+   }
 });
 
 const rest = new REST({ version: '10' }).setToken(token ? token : '');
@@ -26,6 +30,10 @@ const commands = [
    new SlashCommandBuilder()
       .setName('ping')
       .setDescription('Replies with Pong!'),
+
+   new SlashCommandBuilder()
+      .setName('server')
+      .setDescription('Replies with server info!'),
 ];
 
 // When the client is ready, run this code (only once)
