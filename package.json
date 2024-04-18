@@ -5,9 +5,15 @@
   "devDependencies": {
     "@types/bun": "latest",
     "@types/node": "^20.12.7",
-    "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5"
+  },
+  "scripts": {
+    "dev": "bun run src/index.ts",
+    "build": "tsc",
+    "watch": "ts-node-dev src/index.ts",
+    "commit": "bun update && bun run build && read -p 'Descriptions Commit: ' message && git add . && echo -n \"$message - \" && node getTime.js | xargs -I {} git commit -m \"$message - {}\" && git push"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
