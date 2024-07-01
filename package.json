@@ -19,6 +19,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "discord-player": "^6.6.8",
     "discord.js": "^14.14.1"
   }
 }
